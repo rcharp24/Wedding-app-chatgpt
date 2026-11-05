@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wedding HQ</title>
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--ink:#30343b;--muted:#737984;--line:#e9e5e1;--paper:#fff;--canvas:#f7f5f2;--rose:#c98f91;--sage:#879b83;--blue:#718ca5;--gold:#c5a36a;--shadow:0 8px 28px rgba(40,35,30,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:248px 1fr}
+.sidebar{background:#fff;border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 10px 18px;border-bottom:1px solid var(--line)}
+.brandmark{width:36px;height:36px;border-radius:12px;background:#f3e6e4;color:#9c696b;display:grid;place-items:center;font-size:19px}
+.brand strong{font-family:Georgia,serif;font-size:20px;font-weight:500}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.navlabel{font-size:10px;font-weight:700;color:#a0a2a6;letter-spacing:.12em;padding:0 12px;margin:4px 0}
+nav{display:grid;gap:4px}.navbtn{border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;color:#626873;display:flex;align-items:center;gap:12px}
+.navbtn:hover,.navbtn.active{background:#f5efed;color:#8f6264}.navbtn .ico{width:18px;text-align:center;font-size:16px}
+.sidebarfoot{margin-top:auto;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fcfbfa}.sidebarfoot b{font-size:12px}.sidebarfoot p{font-size:11px;color:var(--muted);margin:5px 0 0}
+main{min-width:0}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:500}
+.crumb{font-size:13px;color:var(--muted)}.topright{display:flex;align-items:center;gap:12px}.avatar{width:34px;height:34px;border-radius:50%;background:#e7ece4;color:#62765e;display:grid;place-items:center;font-weight:700}
+.content{padding:28px 30px 44px;max-width:1500px;margin:auto}.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#a17b7d;font-weight:700}.pagehead h1{font:500 30px/1.15 Georgia,serif;margin:5px 0}.sub{color:var(--muted);margin:6px 0 0}.btn{border:1px solid var(--line);background:white;border-radius:9px;padding:9px 13px;color:var(--ink);font-weight:600}.btn.primary{background:#8d7775;color:white;border-color:#8d7775}.btn.soft{background:#f5efed;color:#8f6264;border-color:#f5efed}.btn.danger{color:#a54d4d}.btn:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:var(--shadow)}.statlabel{color:var(--muted);font-size:12px}.statvalue{font:500 26px Georgia,serif;margin-top:8px}.statnote{font-size:11px;color:var(--muted);margin-top:4px}.sectiontitle{font:500 19px Georgia,serif;margin:0 0 13px}.dashgrid{grid-template-columns:1.25fr 1fr}.progress{height:7px;background:#f0eeeb;border-radius:9px;overflow:hidden;margin:10px 0}.progress span{display:block;height:100%;background:var(--sage);width:0}
+.maplayout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:14px;height:calc(100vh - 190px);min-height:570px}
+.mapside{display:flex;flex-direction:column;gap:12px;min-height:0}.mapcard{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px}.mapcard.scroll{overflow:auto;min-height:0;flex:1}
+#map{height:100%;min-height:570px;border-radius:14px;border:1px solid var(--line);z-index:1}.mapwrap{position:relative;min-width:0}
+.field{display:grid;gap:5px;margin:9px 0}.field label{font-size:11px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid #e5e1dd;border-radius:8px;background:#fff;color:var(--ink);outline:none}.field textarea{min-height:70px;resize:vertical}
+.row{display:flex;gap:8px;align-items:center}.row>*{min-width:0}.row .grow{flex:1}.category{display:flex;align-items:center;gap:8px;padding:8px 3px;border-bottom:1px solid #f1efed}.dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}.category label{flex:1;font-size:12px}.category small{color:var(--muted)}.pinlist{display:grid;gap:3px;margin-top:8px}.pinitem{padding:8px;border-radius:8px;display:flex;align-items:center;gap:8px;cursor:pointer}.pinitem:hover{background:#f8f6f4}.pinitem span:nth-child(2){flex:1;font-size:12px}.pinitem small{color:var(--muted);font-size:10px}
+.routebox{background:#f8f5f2;border-radius:10px;padding:10px;margin-top:10px}.routebox strong{font-size:12px}.routebox p{font-size:11px;color:var(--muted);margin:4px 0}
+.tablewrap{overflow:auto}.data{width:100%;border-collapse:collapse;font-size:12px}.data th{text-align:left;color:var(--muted);font-weight:600;background:#faf9f8}.data th,.data td{padding:11px 10px;border-bottom:1px solid #f0eeeb;white-space:nowrap}.data td input,.data td select{padding:6px;border:1px solid var(--line);border-radius:6px;max-width:160px}
+.pill{display:inline-flex;padding:4px 8px;border-radius:20px;background:#f3efeb;color:#786b62;font-size:10px;font-weight:700}
+.task{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #f0eeeb}.task input{accent-color:#879b83}.task .done{text-decoration:line-through;color:#999}
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:13px}.hidden{display:none!important}.notice{background:#f8f5f2;border:1px solid #eee5df;border-radius:10px;padding:11px;color:#71645d;font-size:11px;line-height:1.5}
+.modalback{position:fixed;inset:0;background:#2228;display:grid;place-items:center;z-index:2000;padding:18px}.modal{background:#fff;border-radius:16px;padding:20px;width:min(480px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 60px #0003}.modal h2{font:500 23px Georgia,serif;margin:0 0 12px}.modalactions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+.mobilemenu{display:none}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}.topbar{padding:0 16px}.content{padding:20px 15px}.stats{grid-template-columns:repeat(2,1fr)}.dashgrid{grid-template-columns:1fr}.maplayout{grid-template-columns:1fr;height:auto}.mapside{order:2}.mapwrap{order:1;height:55vh;min-height:390px}#map{min-height:390px}.mobilemenu{display:inline-flex}.pagehead h1{font-size:26px}}
+@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.statvalue{font-size:22px}.topbar{height:60px}.pagehead{flex-direction:column}.content{padding-top:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brandmark">♡</div><div><strong>Wedding HQ</strong><small>Our day, beautifully planned</small></div></div>
+  <div><div class="navlabel">WORKSPACE</div><nav id="nav">
+    <button class="navbtn active" data-page="dashboard"><span class="ico">⌂</span>Dashboard</button>
+    <button class="navbtn" data-page="map"><span class="ico">⌖</span>Wedding map</button>
+    <button class="navbtn" data-page="budget"><span class="ico">＄</span>Budget & expenses</button>
+    <button class="navbtn" data-page="venues"><span class="ico">♧</span>Venues</button>
+    <button class="navbtn" data-page="vendors"><span class="ico">✿</span>Vendors</button>
+    <button class="navbtn" data-page="guests"><span class="ico">♙</span>Guest list</button>
+    <button class="navbtn" data-page="checklist"><span class="ico">☑</span>Checklist</button>
+    <button class="navbtn" data-page="inbox"><span class="ico">✉</span>Wedding inbox</button>
+  </nav></div>
+  <div class="sidebarfoot"><b>Planning together</b><p>Your information is saved in this browser on this device. Shared accounts and cloud sync can be added in a later version.</p></div>
+</aside>
+<main>
+<header class="topbar"><div class="row"><button class="btn mobilemenu" id="mobileMenu">☰</button><span class="crumb">Wedding workspace / <b id="crumb">Dashboard</b></span></div><div class="topright"><span class="crumb" id="saveState">Saved locally</span><div class="avatar">♡</div></div></header>
+<div class="content">
+<section id="page-dashboard" class="page">
+  <div class="pagehead"><div><div class="eyebrow">YOUR WEDDING AT A GLANCE</div><h1>Welcome to your Wedding HQ</h1><p class="sub">A shared place to bring all the little details together.</p></div><button class="btn primary" onclick="go('checklist')">View planning checklist →</button></div>
+  <div class="grid stats">
+    <div class="card"><div class="statlabel">Wedding date</div><div class="statvalue" id="dashDate">Not set</div><div class="statnote" id="countdown">Add your date in settings</div></div>
+    <div class="card"><div class="statlabel">Total budget</div><div class="statvalue" id="dashBudget">$0</div><div class="statnote" id="spentNote">$0 spent so far</div></div>
+    <div class="card"><div class="statlabel">Guest list</div><div class="statvalue" id="dashGuests">0</div><div class="statnote">Guests added</div></div>
+    <div class="card"><div class="statlabel">Saved locations</div><div class="statvalue" id="dashPins">0</div><div class="statnote">Across all map categories</div></div>
+  </div>
+  <div class="grid dashgrid">
+    <div class="card"><h2 class="sectiontitle">Planning progress</h2><div class="row" style="justify-content:space-between"><span class="statlabel">Completed tasks</span><b id="taskProgress">0%</b></div><div class="progress"><span id="progressbar"></span></div><div class="statnote" id="taskCount">0 of 0 tasks completed</div><h2 class="sectiontitle" style="margin-top:25px">Upcoming tasks</h2><div id="dashTasks"></div></div>
+    <div class="card"><h2 class="sectiontitle">Quick actions</h2><div class="grid" style="grid-template-columns:1fr 1fr">
+      <button class="btn" onclick="go('map')">＋ Add a location</button><button class="btn" onclick="go('budget')">＋ Add an expense</button><button class="btn" onclick="go('vendors')">＋ Add a vendor</button><button class="btn" onclick="go('guests')">＋ Add a guest</button>
+    </div><h2 class="sectiontitle" style="margin-top:24px">Wedding details</h2>
+      <div class="field"><label>Couple / wedding name</label><input id="weddingName" placeholder="e.g. Alex & Jordan's Wedding" onchange="saveWedding()"></div>
+      <div class="field"><label>Wedding date</label><input id="weddingDate" type="date" onchange="saveWedding()"></div>
+      <div class="field"><label>Overall budget ($)</label><input id="weddingBudget" type="number" min="0" placeholder="e.g. 25000" onchange="saveWedding()"></div>
+      <div class="notice">This starter version stores information in your browser. Connect a secure backend before using it for real shared planning or sensitive documents.</div>
+    </div>
+  </div>
+</section>
+
+<section id="page-map" class="page hidden">
+  <div class="pagehead"><div><div class="eyebrow">FIND YOUR PERFECT PLACES</div><h1>Wedding map</h1><p class="sub">Save venues, churches, hotels, and vendors. Select any two pins to calculate a route.</p></div><button class="btn primary" onclick="openPinModal()">＋ Add location</button></div>
+  <div class="maplayout">
+    <div class="mapside">
+      <div class="mapcard">
+        <div class="field" style="margin-top:0"><label>SEARCH THE MAP</label><div class="row"><input class="grow" id="mapSearch" placeholder="Search address or place…"><button class="btn" id="searchBtn">Go</button></div></div>
+        <div class="row"><button class="btn soft grow" onclick="openCategoryModal()">＋ Category</button><button class="btn grow" onclick="openPinModal()">＋ Pin</button></div>
+      </div>
+      <div class="mapcard scroll">
+        <div class="row" style="justify-content:space-between"><b style="font-size:12px">Categories</b><small id="categoryCount" class="crumb"></small></div>
+        <div id="categoryList"></div>
+        <div style="border-top:1px solid var(--line);margin:12px 0"></div>
+        <b style="font-size:12px">Saved locations</b><div id="pinList" class="pinlist"></div>
+      </div>
+      <div class="mapcard">
+        <b style="font-size:12px">Directions between pins</b>
+        <div class="field"><label>STARTING LOCATION</label><select id="routeFrom"><option value="">Select a saved pin</option></select></div>
+        <div class="field"><label>DESTINATION</label><select id="routeTo"><option value="">Select a saved pin</option></select></div>
+        <div class="row"><button class="btn primary grow" id="routeBtn">Calculate route</button><button class="btn" id="swapBtn" title="Reverse route">⇄</button></div>
+        <div id="routeResult"></div>
+      </div>
+    </div>
+    <div class="mapwrap"><div id="map"></div></div>
+  </div>
+  <p class="statnote" style="margin-top:10px">Map data © OpenStreetMap contributors. Search and routing use public demo services and may be rate-limited; production use should configure a dedicated provider/API key.</p>
+</section>
+
+<section id="page-budget" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">KEEP THE NUMBERS IN CHECK</div><h1>Budget & expenses</h1><p class="sub">Track estimates, actual costs, deposits, and upcoming balances.</p></div><button class="btn primary" onclick="addExpense()">＋ Add expense</button></div>
+ <div class="grid stats"><div class="card"><div class="statlabel">Overall budget</div><div class="statvalue" id="budgetTotal">$0</div></div><div class="card"><div class="statlabel">Estimated total</div><div class="statvalue" id="budgetEstimate">$0</div></div><div class="card"><div class="statlabel">Actual spent</div><div class="statvalue" id="budgetSpent">$0</div></div><div class="card"><div class="statlabel">Remaining</div><div class="statvalue" id="budgetRemaining">$0</div></div></div>
+ <div class="card"><h2 class="sectiontitle">Expenses</h2><div class="tablewrap"><table class="data"><thead><tr><th>Expense</th><th>Category</th><th>Estimated</th><th>Actual</th><th>Paid</th><th>Due date</th><th></th></tr></thead><tbody id="expenseRows"></tbody></table></div></div>
+</section>
+
+<section id="page-venues" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">FIND THE PLACE</div><h1>Venue shortlist</h1><p class="sub">Compare your favorite ceremony and reception locations.</p></div><button class="btn primary" onclick="addVenue()">＋ Add venue</button></div>
+ <div class="card"><div class="tablewrap"><table class="data"><thead><tr><th>Venue</th><th>Type</th><th>Capacity</th><th>Quoted price</th><th>Status</th><th>Rating</th><th></th></tr></thead><tbody id="venueRows"></tbody></table></div></div>
+</section>
+
+<section id="page-vendors" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">YOUR WEDDING TEAM</div><h1>Vendors</h1><p class="sub">Keep contact details, quotes, and booking status together.</p></div><button class="btn primary" onclick="addVendor()">＋ Add vendor</button></div>
+ <div class="card"><div class="tablewrap"><table class="data"><thead><tr><th>Business</th><th>Service</th><th>Contact</th><th>Quote</th><th>Status</th><th>Notes</th><th></th></tr></thead><tbody id="vendorRows"></tbody></table></div></div>
+</section>
+
+<section id="page-guests" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">WHO'S CELEBRATING WITH YOU</div><h1>Guest list</h1><p class="sub">Track invitations, responses, meal choices, and plus-ones.</p></div><button class="btn primary" onclick="addGuest()">＋ Add guest</button></div>
+ <div class="grid stats"><div class="card"><div class="statlabel">Total guests</div><div class="statvalue" id="guestTotal">0</div></div><div class="card"><div class="statlabel">Confirmed</div><div class="statvalue" id="guestYes">0</div></div><div class="card"><div class="statlabel">Declined</div><div class="statvalue" id="guestNo">0</div></div><div class="card"><div class="statlabel">Awaiting response</div><div class="statvalue" id="guestPending">0</div></div></div>
+ <div class="card"><div class="tablewrap"><table class="data"><thead><tr><th>Name</th><th>Group</th><th>RSVP</th><th>Meal</th><th>Plus-one</th><th>Dietary / notes</th><th></th></tr></thead><tbody id="guestRows"></tbody></table></div></div>
+</section>
+
+<section id="page-checklist" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">ONE STEP AT A TIME</div><h1>Planning checklist</h1><p class="sub">Add tasks, set due dates, and decide who is handling each detail.</p></div><button class="btn primary" onclick="addTask()">＋ Add task</button></div>
+ <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 class="sectiontitle" style="margin:0">Your tasks</h2><span class="pill" id="checklistPill">0 completed</span></div><div id="taskList"></div></div>
+</section>
+
+<section id="page-inbox" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">KEEP THE CONVERSATION TOGETHER</div><h1>Wedding inbox</h1><p class="sub">A place to track wedding-related messages and follow-ups.</p></div><button class="btn primary" onclick="addEmail()">＋ Log an email</button></div>
+ <div class="notice" style="margin-bottom:14px"><b>Email connection is not enabled in this prototype.</b> Secure Gmail and Outlook integration requires OAuth consent, provider APIs, and a backend. For now, you can manually log important messages and link them to vendors. No email account is connected or accessed.</div>
+ <div class="card"><div class="tablewrap"><table class="data"><thead><tr><th>Subject</th><th>From</th><th>Category</th><th>Date</th><th>Follow-up</th><th>Summary / notes</th><th></th></tr></thead><tbody id="emailRows"></tbody></table></div></div>
+</section>
+</div>
+</main>
+</div>
+<div id="modalRoot"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const DEFAULT_CATS=[
+ {id:'venue',name:'Wedding Venues',color:'#b77b80',icon:'♥',visible:true},
+ {id:'church',name:'Churches',color:'#718ca5',icon:'✦',visible:true},
+ {id:'hotel',name:'Hotels',color:'#879b83',icon:'⌂',visible:true},
+ {id:'restaurant',name:'Restaurants',color:'#c5a36a',icon:'♨',visible:true},
+ {id:'vendor',name:'Vendors',color:'#9b87a8',icon:'✿',visible:true},
+ {id:'other',name:'Other',color:'#8c929a',icon:'•',visible:true}
+];
+const fresh=()=>({wedding:{name:'',date:'',budget:0},categories:DEFAULT_CATS,pins:[],expenses:[],venues:[],vendors:[],guests:[],tasks:[],emails:[]});
+let data;try{data=JSON.parse(localStorage.getItem('weddingHQ_v1'))||fresh()}catch(e){data=fresh()}
+function persist(){localStorage.setItem('weddingHQ_v1',JSON.stringify(data));document.getElementById('saveState').textContent='Saved locally';renderAll()}
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Number(n)||0);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cat=id=>data.categories.find(c=>c.id===id)||data.categories[0];
+let map,markers={},routeLayer=null,searchMarker=null;
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));document.getElementById('page-'+page).classList.remove('hidden');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.getElementById('crumb').textContent=({dashboard:'Dashboard',map:'Wedding map',budget:'Budget & expenses',venues:'Venues',vendors:'Vendors',guests:'Guest list',checklist:'Checklist',inbox:'Wedding inbox'})[page];if(page==='map')setTimeout(()=>map&&map.invalidateSize(),100);if(innerWidth<900)document.querySelector('.sidebar').style.display='none'}
+document.querySelectorAll('.navbtn').forEach(b=>b.onclick=()=>go(b.dataset.page));
+document.getElementById('mobileMenu').onclick=()=>{const s=document.querySelector('.sidebar');s.style.display=s.style.display==='flex'?'none':'flex';s.style.position='absolute';s.style.zIndex=900;s.style.top='60px';s.style.left=0;s.style.bottom=0;s.style.width='250px';s.style.boxShadow='0 8px 20px #0002'};
+function saveWedding(){data.wedding.name=document.getElementById('weddingName').value;data.wedding.date=document.getElementById('weddingDate').value;data.wedding.budget=Number(document.getElementById('weddingBudget').value)||0;persist()}
+function initMap(){if(!window.L){document.getElementById('map').innerHTML='<div class="empty">Map library could not load. Check your internet connection and refresh.</div>';return}
+ map=L.map('map').setView([38.5,-96],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);map.on('click',e=>openPinModal(null,e.latlng.lat,e.latlng.lng));refreshMap()}
+function pinIcon(p){const c=cat(p.category);return L.divIcon({className:'',html:`<div style="width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${c.color};border:2px solid white;box-shadow:0 2px 7px #0004;display:grid;place-items:center;color:white"><span style="transform:rotate(45deg);font-size:13px">${esc(c.icon)}</span></div>`,iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-27]})}
+function refreshMap(){if(!map)return;Object.values(markers).forEach(m=>map.removeLayer(m));markers={};data.pins.forEach(p=>{if(!cat(p.category).visible)return;const m=L.marker([p.lat,p.lng],{icon:pinIcon(p)}).addTo(map);m.bindPopup(`<b>${esc(p.name)}</b><br><small>${esc(cat(p.category).name)}</small><br>${esc(p.address||'')}<br><button onclick="focusPin('${p.id}')">View location</button>`);markers[p.id]=m});renderMapSide()}
+function focusPin(id){const p=data.pins.find(x=>x.id===id);if(p){map.setView([p.lat,p.lng],14);markers[id]?.openPopup()}}
+function renderMapSide(){
+ document.getElementById('categoryCount').textContent=data.categories.length+' categories';
+ document.getElementById('categoryList').innerHTML=data.categories.map(c=>`<div class="category"><input type="checkbox" ${c.visible?'checked':''} onchange="toggleCat('${c.id}',this.checked)"><span class="dot" style="background:${c.color}"></span><label>${esc(c.icon)} ${esc(c.name)}</label><small>${data.pins.filter(p=>p.category===c.id).length}</small><button class="btn" style="padding:3px 7px" onclick="editCategory('${c.id}')">⋯</button></div>`).join('');
+ document.getElementById('pinList').innerHTML=data.pins.length?data.pins.map(p=>`<div class="pinitem" onclick="focusPin('${p.id}')"><span class="dot" style="background:${cat(p.category).color}"></span><span>${esc(p.name)}<small style="display:block">${esc(cat(p.category).name)}</small></span><button class="btn" style="padding:3px 6px" onclick="event.stopPropagation();editPin('${p.id}')">Edit</button></div>`).join(''):'<div class="empty">No saved locations yet. Add a pin or click on the map.</div>';
+ const opts='<option value="">Select a saved pin</option>'+data.pins.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+ const a=document.getElementById('routeFrom'),b=document.getElementById('routeTo'),av=a.value,bv=b.value;a.innerHTML=opts;b.innerHTML=opts;a.value=av;b.value=bv;
+}
+function toggleCat(id,v){cat(id).visible=v;refreshMap()}
+function openModal(title,body,onSave,saveLabel='Save'){document.getElementById('modalRoot').innerHTML=`<div class="modalback" id="modalback"><div class="modal"><h2>${title}</h2>${body}<div class="modalactions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="modalSave">${saveLabel}</button></div></div></div>`;document.getElementById('modalback').onclick=e=>{if(e.target.id==='modalback')closeModal()};document.getElementById('modalSave').onclick=onSave}
+function closeModal(){document.getElementById('modalRoot').innerHTML=''}
+const field=(label,id,value='',type='text',placeholder='')=>`<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(value)}" placeholder="${esc(placeholder)}"></div>`;
+function openCategoryModal(existing){const c=existing?cat(existing):null;openModal(c?'Edit category':'Create category',field('CATEGORY NAME','cname',c?.name||'')+`<div class="row"><div class="field grow"><label>PIN COLOR</label><input id="ccolor" type="color" value="${c?.color||'#b77b80'}"></div><div class="field grow"><label>ICON (emoji or symbol)</label><input id="cicon" value="${esc(c?.icon||'✿')}"></div></div>`,()=>{const name=document.getElementById('cname').value.trim();if(!name)return alert('Enter a category name.');if(c){c.name=name;c.color=document.getElementById('ccolor').value;c.icon=document.getElementById('cicon').value||'•'}else data.categories.push({id:'c'+Date.now(),name,color:document.getElementById('ccolor').value,icon:document.getElementById('cicon').value||'•',visible:true});closeModal();persist()})}
+function editCategory(id){openCategoryModal(id)}
+function openPinModal(existing,lat,lng){const p=existing?data.pins.find(x=>x.id===existing):null;const catopts=data.categories.map(c=>`<option value="${c.id}" ${(p?.category||data.categories[0].id)===c.id?'selected':''}>${esc(c.name)}</option>`).join('');openModal(p?'Edit location':'Add map location',field('LOCATION NAME','pname',p?.name||'')+field('ADDRESS','paddress',p?.address||'','text','Street, city, state')+`<div class="field"><label>CATEGORY</label><select id="pcat">${catopts}</select></div>`+`<div class="row"><div class="field grow"><label>LATITUDE</label><input id="plat" type="number" step="any" value="${p?.lat??lat??''}"></div><div class="field grow"><label>LONGITUDE</label><input id="plng" type="number" step="any" value="${p?.lng??lng??''}"></div></div>`+field('PHONE','pphone',p?.phone||'','tel')+field('WEBSITE','pwebsite',p?.website||'','url')+`<div class="field"><label>NOTES</label><textarea id="pnotes">${esc(p?.notes||'')}</textarea></div>`,async()=>{const name=document.getElementById('pname').value.trim();let la=Number(document.getElementById('plat').value),lo=Number(document.getElementById('plng').value);if(!name)return alert('Enter a location name.');if(!Number.isFinite(la)||!Number.isFinite(lo)||Math.abs(la)>90||Math.abs(lo)>180)return alert('Enter valid latitude and longitude. You can search for an address to fill these in.');const obj={id:p?.id||'p'+Date.now(),name,address:document.getElementById('paddress').value,category:document.getElementById('pcat').value,lat:la,lng:lo,phone:document.getElementById('pphone').value,website:document.getElementById('pwebsite').value,notes:document.getElementById('pnotes').value};if(p)Object.assign(p,obj);else data.pins.push(obj);closeModal();persist();if(map){map.setView([la,lo],13);refreshMap()}},'Save location')}
+function editPin(id){openPinModal(id)}
+async function searchPlace(){const q=document.getElementById('mapSearch').value.trim();if(!q)return;try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+encodeURIComponent(q));const a=await r.json();if(!a.length)return alert('No matching location found. Try a more complete address.');const x=a[0];const ll=[Number(x.lat),Number(x.lon)];map.setView(ll,15);if(searchMarker)map.removeLayer(searchMarker);searchMarker=L.marker(ll).addTo(map).bindPopup(esc(x.display_name)).openPopup();document.getElementById('mapSearch').dataset.lat=x.lat;document.getElementById('mapSearch').dataset.lng=x.lon;document.getElementById('mapSearch').dataset.address=x.display_name;if(confirm('Location found. Add it as a saved pin?')){openPinModal(null,ll[0],ll[1]);setTimeout(()=>{document.getElementById('pname').value=x.name||q;document.getElementById('paddress').value=x.display_name},80)}}catch(e){alert('Search failed. Check your connection and try again.')}}
+document.getElementById('searchBtn').onclick=searchPlace;document.getElementById('mapSearch').addEventListener('keydown',e=>{if(e.key==='Enter')searchPlace()});
+document.getElementById('routeBtn').onclick=calculateRoute;document.getElementById('swapBtn').onclick=()=>{const a=document.getElementById('routeFrom'),b=document.getElementById('routeTo'),v=a.value;a.value=b.value;b.value=v};
+async function calculateRoute(){const a=data.pins.find(p=>p.id===document.getElementById('routeFrom').value),b=data.pins.find(p=>p.id===document.getElementById('routeTo').value);if(!a||!b)return alert('Select both a starting location and destination.');if(a.id===b.id)return alert('Choose two different locations.');const out=document.getElementById('routeResult');out.innerHTML='<div class="routebox">Calculating route…</div>';try{const url=`https://router.project-osrm.org/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson&steps=true`;const r=await fetch(url);const j=await r.json();if(j.code!=='Ok'||!j.routes?.length)throw Error('No route found');const route=j.routes[0];if(routeLayer)map.removeLayer(routeLayer);routeLayer=L.geoJSON(route.geometry,{style:{color:'#8d7775',weight:5,opacity:.85}}).addTo(map);map.fitBounds(routeLayer.getBounds(),{padding:[35,35]});const km=route.distance/1000,mi=km*.621371,min=route.duration/60;const steps=route.legs[0].steps.filter(s=>s.name||s.maneuver.type!=='turn').slice(0,12).map(s=>`<li>${esc(s.maneuver.instruction||s.name||s.maneuver.type)}</li>`).join('');out.innerHTML=`<div class="routebox"><strong>${esc(a.name)} → ${esc(b.name)}</strong><p><b>${mi.toFixed(1)} mi</b> · about ${Math.round(min)} min driving</p><details><summary style="font-size:11px;cursor:pointer">Turn-by-turn directions</summary><ol style="font-size:11px;padding-left:18px">${steps||'<li>Follow the route shown on the map.</li>'}</ol></details></div>`}catch(e){out.innerHTML='<div class="routebox">Could not calculate a route. Try again or check the addresses and coordinates.</div>'}}
+function addExpense(){openModal('Add expense',field('EXPENSE','ename')+field('CATEGORY','ecat','','text','Venue, catering, attire…')+field('ESTIMATED COST ($)','eest','0','number')+field('ACTUAL COST ($)','eactual','0','number')+field('AMOUNT PAID ($)','epaid','0','number')+field('PAYMENT DUE','edue','','date'),()=>{if(!document.getElementById('ename').value.trim())return;data.expenses.push({id:Date.now(),name:document.getElementById('ename').value,cat:document.getElementById('ecat').value,est:+document.getElementById('eest').value,actual:+document.getElementById('eactual').value,paid:+document.getElementById('epaid').value,due:document.getElementById('edue').value});closeModal();persist()})}
+function addVenue(){openModal('Add venue',field('VENUE NAME','vname')+field('TYPE','vtype','','text','Ceremony, reception, both')+field('GUEST CAPACITY','vcap','','number')+field('QUOTED PRICE ($)','vprice','0','number')+`<div class="field"><label>STATUS</label><select id="vstatus"><option>Considering</option><option>Tour scheduled</option><option>Quote received</option><option>Booked</option><option>Declined</option></select></div>`+field('RATING (1–5)','vrating','0','number')+`<div class="field"><label>PROS / CONS / NOTES</label><textarea id="vnotes"></textarea></div>`,()=>{if(!document.getElementById('vname').value.trim())return;data.venues.push({id:Date.now(),name:document.getElementById('vname').value,type:document.getElementById('vtype').value,capacity:+document.getElementById('vcap').value,price:+document.getElementById('vprice').value,status:document.getElementById('vstatus').value,rating:+document.getElementById('vrating').value,notes:document.getElementById('vnotes').value});closeModal();persist()})}
+function addVendor(){openModal('Add vendor',field('BUSINESS NAME','bname')+field('SERVICE','bservice','','text','Photography, florist…')+field('CONTACT INFORMATION','bcontact')+field('QUOTE ($)','bquote','0','number')+`<div class="field"><label>STATUS</label><select id="bstatus"><option>Researching</option><option>Contacted</option><option>Awaiting response</option><option>Quote received</option><option>Booked</option><option>Not selected</option></select></div>`+`<div class="field"><label>NOTES</label><textarea id="bnotes"></textarea></div>`,()=>{if(!document.getElementById('bname').value.trim())return;data.vendors.push({id:Date.now(),name:document.getElementById('bname').value,service:document.getElementById('bservice').value,contact:document.getElementById('bcontact').value,quote:+document.getElementById('bquote').value,status:document.getElementById('bstatus').value,notes:document.getElementById('bnotes').value});closeModal();persist()})}
+function addGuest(){openModal('Add guest',field('GUEST NAME','gname')+field('GROUP / HOUSEHOLD','ggroup','','text','Family, friends, work…')+`<div class="field"><label>RSVP</label><select id="grsvp"><option>Awaiting</option><option>Confirmed</option><option>Declined</option></select></div><div class="field"><label>MEAL</label><select id="gmeal"><option>Not selected</option><option>Chicken</option><option>Beef</option><option>Fish</option><option>Vegetarian</option><option>Kids meal</option></select></div>`+`<div class="field"><label>PLUS-ONE</label><select id="gplus"><option>No</option><option>Yes</option></select></div>`+field('DIETARY NEEDS / NOTES','gnote'),()=>{if(!document.getElementById('gname').value.trim())return;data.guests.push({id:Date.now(),name:document.getElementById('gname').value,group:document.getElementById('ggroup').value,rsvp:document.getElementById('grsvp').value,meal:document.getElementById('gmeal').value,plus:document.getElementById('gplus').value,note:document.getElementById('gnote').value});closeModal();persist()})}
+function addTask(){openModal('Add planning task',field('TASK','tname')+field('DUE DATE','tdue','','date')+`<div class="field"><label>ASSIGNED TO</label><select id="towner"><option>Both</option><option>Partner 1</option><option>Partner 2</option></select></div>`+`<div class="field"><label>PRIORITY</label><select id="tpriority"><option>Normal</option><option>High</option><option>Low</option></select></div>`,()=>{if(!document.getElementById('tname').value.trim())return;data.tasks.push({id:Date.now(),name:document.getElementById('tname').value,due:document.getElementById('tdue').value,owner:document.getElementById('towner').value,priority:document.getElementById('tpriority').value,done:false});closeModal();persist()})}
+function addEmail(){openModal('Log wedding email',field('SUBJECT','msubject')+field('SENDER / VENDOR','msender')+field('CATEGORY','mcat','','text','Venue, photography, payment…')+field('DATE','mdate',new Date().toISOString().slice(0,10),'date')+`<div class="field"><label>FOLLOW-UP STATUS</label><select id="mfollow"><option>No follow-up</option><option>Needs reply</option><option>Waiting for response</option><option>Completed</option></select></div>`+`<div class="field"><label>SUMMARY / NOTES</label><textarea id="mnotes"></textarea></div>`,()=>{if(!document.getElementById('msubject').value.trim())return;data.emails.push({id:Date.now(),subject:document.getElementById('msubject').value,sender:document.getElementById('msender').value,cat:document.getElementById('mcat').value,date:document.getElementById('mdate').value,follow:document.getElementById('mfollow').value,notes:document.getElementById('mnotes').value});closeModal();persist()})}
+function del(type,id){if(!confirm('Delete this item?'))return;data[type]=data[type].filter(x=>String(x.id)!==String(id));persist()}
+function renderAll(){renderDashboard();renderBudget();renderVenues();renderVendors();renderGuests();renderTasks();renderEmails();if(map){refreshMap()}}
+function renderDashboard(){document.getElementById('dashDate').textContent=data.wedding.date?new Date(data.wedding.date+'T00:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):'Not set';let days=data.wedding.date?Math.ceil((new Date(data.wedding.date+'T00:00:00')-new Date(new Date().toDateString()))/86400000):null;document.getElementById('countdown').textContent=days===null?'Add your date below':days>=0?`${days} days to go`:`${Math.abs(days)} days since the date`;document.getElementById('dashBudget').textContent=money(data.wedding.budget);document.getElementById('spentNote').textContent=money(data.expenses.reduce((s,x)=>s+(x.actual||0),0))+' actual spending';document.getElementById('dashGuests').textContent=data.guests.length;document.getElementById('dashPins').textContent=data.pins.length;const done=data.tasks.filter(t=>t.done).length,total=data.tasks.length,pct=total?Math.round(done/total*100):0;document.getElementById('taskProgress').textContent=pct+'%';document.getElementById('progressbar').style.width=pct+'%';document.getElementById('taskCount').textContent=`${done} of ${total} tasks completed`;document.getElementById('dashTasks').innerHTML=data.tasks.filter(t=>!t.done).slice(0,4).map(t=>`<div class="task"><span>○</span><span style="flex:1">${esc(t.name)}</span><small>${esc(t.due||'No due date')}</small></div>`).join('')||'<div class="empty">No outstanding tasks. Add a task when ready.</div>';document.getElementById('weddingName').value=data.wedding.name;document.getElementById('weddingDate').value=data.wedding.date;document.getElementById('weddingBudget').value=data.wedding.budget||''}
+function renderBudget(){const est=data.expenses.reduce((s,x)=>s+(x.est||0),0),spent=data.expenses.reduce((s,x)=>s+(x.actual||0),0);document.getElementById('budgetTotal').textContent=money(data.wedding.budget);document.getElementById('budgetEstimate').textContent=money(est);document.getElementById('budgetSpent').textContent=money(spent);document.getElementById('budgetRemaining').textContent=money(data.wedding.budget-spent);document.getElementById('expenseRows').innerHTML=data.expenses.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.cat)}</td><td>${money(x.est)}</td><td>${money(x.actual)}</td><td>${money(x.paid)}</td><td>${esc(x.due||'—')}</td><td><button class="btn danger" onclick="del('expenses',${x.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No expenses added yet.</td></tr>'}
+function renderVenues(){document.getElementById('venueRows').innerHTML=data.venues.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.type)}</td><td>${x.capacity||'—'}</td><td>${money(x.price)}</td><td><span class="pill">${esc(x.status)}</span></td><td>${x.rating||'—'}/5</td><td><button class="btn danger" onclick="del('venues',${x.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No venues added yet.</td></tr>'}
+function renderVendors(){document.getElementById('vendorRows').innerHTML=data.vendors.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.service)}</td><td>${esc(x.contact)}</td><td>${money(x.quote)}</td><td><span class="pill">${esc(x.status)}</span></td><td>${esc(x.notes)}</td><td><button class="btn danger" onclick="del('vendors',${x.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No vendors added yet.</td></tr>'}
+function renderGuests(){const yes=data.guests.filter(x=>x.rsvp==='Confirmed').length,no=data.guests.filter(x=>x.rsvp==='Declined').length;document.getElementById('guestTotal').textContent=data.guests.length;document.getElementById('guestYes').textContent=yes;document.getElementById('guestNo').textContent=no;document.getElementById('guestPending').textContent=data.guests.length-yes-no;document.getElementById('guestRows').innerHTML=data.guests.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.group)}</td><td><span class="pill">${esc(x.rsvp)}</span></td><td>${esc(x.meal)}</td><td>${esc(x.plus)}</td><td>${esc(x.note)}</td><td><button class="btn danger" onclick="del('guests',${x.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No guests added yet.</td></tr>'}
+function renderTasks(){document.getElementById('checklistPill').textContent=data.tasks.filter(x=>x.done).length+' completed';document.getElementById('taskList').innerHTML=data.tasks.map(t=>`<div class="task"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id},this.checked)"><span class="${t.done?'done':''}" style="flex:1">${esc(t.name)}<small style="display:block;color:#92969c">${esc(t.owner)} · ${esc(t.priority)} · ${esc(t.due||'No due date')}</small></span><button class="btn danger" onclick="del('tasks',${t.id})">Delete</button></div>`).join('')||'<div class="empty">Your checklist is empty. Add your first planning task.</div>'}
+function toggleTask(id,v){const t=data.tasks.find(x=>x.id===id);if(t)t.done=v;persist()}
+function renderEmails(){document.getElementById('emailRows').innerHTML=data.emails.map(x=>`<tr><td>${esc(x.subject)}</td><td>${esc(x.sender)}</td><td>${esc(x.cat)}</td><td>${esc(x.date)}</td><td><span class="pill">${esc(x.follow)}</span></td><td>${esc(x.notes)}</td><td><button class="btn danger" onclick="del('emails',${x.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No emails logged yet.</td></tr>'}
+renderAll();initMap();
+</script>
+</body></html>
